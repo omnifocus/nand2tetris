@@ -5,6 +5,9 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 一上来就写出栈顶值
+ */
 public class Writer {
     private String filePath;
     private String fileName;
@@ -18,22 +21,46 @@ public class Writer {
 
     static {
         callCountMap = new HashMap<>();
+
+    }
+
+    public  void writePreCommands() {
+        pw.println("@261");
+        pw.println("D=A");
+        pw.println("@SP");
+        pw.println("M=D");
+        pw.println("@LCL");
+        pw.println("M=D");
+        pw.println("@ARG");
+        pw.println("M=D");
+        pw.println("@4000");
+        pw.println("D=A");
+        pw.println("@THIS");
+        pw.println("M=D");
+        pw.println("@5000");
+        pw.println("D=A");
+        pw.println("@THAT");
+        pw.println("M=D");
+        pw.println("@Sys.init");
+        pw.println("0;JMP");
     }
 
     public static void main(String[] args) {
-        Integer xx = callCountMap.get("xx");
-        System.out.println(xx == null );
+        System.out.println(System.getProperty("user.dir"));
     }
     public Writer(String filePath) throws IOException {
         this.filePath = filePath;
         this.fileName = filePath.substring(filePath.lastIndexOf(File.separator)+1,filePath.lastIndexOf("."));
         this.pw = new PrintWriter(new FileWriter(filePath));
+        //new完之后，立马写
+        writePreCommands();
     }
 
     void writeFunction(String type,String arg1,Integer arg2) {
 
         switch (type) {
             case "function":
+
                 /*
                    生成括号标签,代码就一份
                  */
@@ -71,7 +98,9 @@ public class Writer {
                  */
                 //根据call的参数 判断return 会不会 覆盖返回地址
                     //没用，因为一个方法可能调用另一个call，而不是直接会调用return
-                String retAddress = funcName + "$ret." + (callCountMap.get(funcName) == null ? "0" : callCountMap.get(funcName) + "");
+                Integer v = callCountMap.get(arg1) == null ? 0 : callCountMap.get(arg1) ;
+                String retAddress = funcName + "$ret." + v;
+                callCountMap.put(arg1,v+1);
                 this.pw.println("@"+retAddress);
                 this.pw.println("D=A");
                 //保存return address
@@ -610,6 +639,8 @@ public class Writer {
         pw.println("M=M+1");
         
     }
+
+
 
 
     void close() throws IOException {
