@@ -1,7 +1,4 @@
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 
 public class Parser {
     private String filePath;
@@ -9,9 +6,13 @@ public class Parser {
     private String currentLine;
     private String[] parts;
     private Writer writer;
+    //获取当前解析的文件名，static变量名用
+    private String fileName;
 
     public Parser(String filePath,Writer writer) throws FileNotFoundException {
         this.filePath = filePath;
+        this.fileName = filePath.substring(filePath.lastIndexOf(File.separator)+1,filePath.lastIndexOf("."));
+
         br = new BufferedReader(new FileReader(filePath));
         this.writer = writer;
     }
@@ -33,9 +34,9 @@ public class Parser {
             if (type == CommandType.C_ARITHMETIC) {
                 writer.writeArithmetic(command);
             } else if (type == CommandType.C_POP) {
-                writer.writePop(arg1(),arg2());
+                writer.writePop(fileName,arg1(),arg2());
             } else if (type == CommandType.C_PUSH) {
-                writer.writePush(arg1(),arg2());
+                writer.writePush(fileName,arg1(),arg2());
             } else if (type == CommandType.C_PROGRAMFLOW) {
                 writer.writeProgramFlow(parts[0],arg1());
             } else if (type == CommandType.C_FUNCTION) {

@@ -10,7 +10,6 @@ import java.util.Map;
  */
 public class Writer {
     private String filePath;
-    private String fileName;
     private PrintWriter pw;
     private static int counter = 0;
     private static int counter_mem = 0;
@@ -50,7 +49,6 @@ public class Writer {
     }
     public Writer(String filePath) throws IOException {
         this.filePath = filePath;
-        this.fileName = filePath.substring(filePath.lastIndexOf(File.separator)+1,filePath.lastIndexOf("."));
         this.pw = new PrintWriter(new FileWriter(filePath));
         //new完之后，立马写
         writePreCommands();
@@ -96,11 +94,10 @@ public class Writer {
                     答：挪到function中处理
                 4. goto
                  */
-                //根据call的参数 判断return 会不会 覆盖返回地址
-                    //没用，因为一个方法可能调用另一个call，而不是直接会调用return
-                Integer v = callCountMap.get(arg1) == null ? 0 : callCountMap.get(arg1) ;
+                // 当前function可能call 多个不一样的 function
+                Integer v = callCountMap.get(funcName) == null ? 0 : callCountMap.get(funcName) ;
                 String retAddress = funcName + "$ret." + v;
-                callCountMap.put(arg1,v+1);
+                callCountMap.put(funcName,v+1);
                 this.pw.println("@"+retAddress);
                 this.pw.println("D=A");
                 //保存return address
@@ -381,7 +378,7 @@ public class Writer {
      * @param seg
      * @param index
      */
-    void writePush(String seg,int index) {
+    void writePush(String fileName,String seg,int index) {
         if ("constant".equals(seg)) {
             pw.println("@"+index);
             pw.println("D=A");
@@ -468,7 +465,7 @@ public class Writer {
      * @param seg
      * @param index
      */
-    void writePop(String seg, int index) {
+    void writePop(String fileName,String seg, int index) {
         pw.println("@SP");
         pw.println("AM=M-1");
         pw.println("D=M");

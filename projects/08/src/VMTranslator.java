@@ -20,7 +20,8 @@ public class VMTranslator {
 
         //输入内容变为文件夹，搜索里面每个以vm结尾的文件，合并成文件夹名.asm
 
-        String fileName = "FunctionCalls/FibonacciElement/";
+//        String fileName = "FunctionCalls/FibonacciElement/";
+        String fileName = "FunctionCalls/StaticsTest/";
 
 
         if ("".equals(fileName)) {
