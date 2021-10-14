@@ -72,8 +72,8 @@ M=D
 @Main.fibonacci
 0;JMP
 (Sys.init$ret.0)
-(WHILE)
-@WHILE
+(Sys.init$WHILE)
+@Sys.init$WHILE
 0;JMP
 (Main.fibonacci)
 @ARG
@@ -117,11 +117,11 @@ M=M+1
 @SP
 AM=M-1
 D=M
-@IF_TRUE
+@Main.fibonacci$IF_TRUE
 D;JNE
-@IF_FALSE
+@Main.fibonacci$IF_FALSE
 0;JMP
-(IF_TRUE)
+(Main.fibonacci$IF_TRUE)
 @ARG
 D=M
 @0
@@ -184,7 +184,7 @@ M=D
 @TT
 A=M
 0;JMP
-(IF_FALSE)
+(Main.fibonacci$IF_FALSE)
 @ARG
 D=M
 @0

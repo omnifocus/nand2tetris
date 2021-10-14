@@ -307,9 +307,10 @@ public class Writer {
     }
 
     void writeProgramFlow(String type,String arg1) {
+        String labelName = funcName + "$" + arg1;
         switch (type) {
             case "label":
-                this.pw.println("(" + arg1 + ")");
+                this.pw.println("(" + labelName + ")");
                 break;
             case "if-goto":
                 //不等0才满足条件
@@ -317,11 +318,11 @@ public class Writer {
                 //push的用于判断是否为0的值已经没用...
                 this.pw.println("AM=M-1");
                 this.pw.println("D=M");
-                this.pw.println("@"+arg1);
+                this.pw.println("@"+labelName);
                 this.pw.println("D;JNE");
                 break;
             case "goto":
-                this.pw.println("@"+arg1);
+                this.pw.println("@"+labelName);
                 this.pw.println("0;JMP");
                 break;
         }
